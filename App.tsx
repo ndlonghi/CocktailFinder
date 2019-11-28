@@ -17,6 +17,7 @@ import {
   Text,
   StatusBar,
 } from 'react-native';
+import {Provider} from 'react-redux';
 
 import {
   Header,
@@ -26,10 +27,12 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import {store} from "./src/store";
+
 const App = () => {
   const usingHermes = typeof HermesInternal === 'object' && HermesInternal !== null;
   return (
-    <>
+    <Provider store={store}>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <ScrollView
@@ -71,7 +74,7 @@ const App = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </>
+    </Provider>
   );
 };
 
