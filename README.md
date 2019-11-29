@@ -18,3 +18,7 @@ In this section we can see a list of all used libraries and why they are being u
 `redux`: to store state of the application globally having a single source of truth.
 
 `react-redux`: to integrate the functionality of redux with the react application. Although this is not required, it makes integration easier.
+
+`react-native-linear-gradient`: to implement the background gradient.
+
+`react-native-vector-icons`: this is used to easily add icon sets.
