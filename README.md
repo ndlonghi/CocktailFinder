@@ -22,3 +22,5 @@ In this section we can see a list of all used libraries and why they are being u
 `react-native-linear-gradient`: to implement the background gradient.
 
 `react-native-vector-icons`: this is used to easily add icon sets.
+
+`react-navigation`: this library is used for navigation between screens and also requires other libraries: `react-native-reanimated`, `react-native-screens`, `react-native-gesture-handler` and `react-navigation-stack`.

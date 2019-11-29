@@ -1,5 +1,5 @@
 import React from "react";
-import {Image, StyleSheet} from "react-native";
+import {Image, StatusBar, StyleSheet} from "react-native";
 import LinearGradient from 'react-native-linear-gradient';
 
 import Button from "../../components/button";
@@ -17,6 +17,10 @@ const MainScreen = () => {
       colors={['#FF0000', '#FF00FF']}
       style={styles.container}
     >
+      <StatusBar
+        translucent={true}
+        backgroundColor="transparent"
+      />
       <Image
         resizeMode="contain"
         source={require('../../assets/imgs/cocktail-finder-logo.png')}
