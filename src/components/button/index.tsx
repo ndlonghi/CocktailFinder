@@ -2,6 +2,7 @@ import React, {FunctionComponent} from "react";
 import {GestureResponderEvent, StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import {ColorProperty} from "csstype";
+import {getShadowStylesFromElevation} from "../../tools/get-shadow-styles-from-elevation";
 
 type ButtonProps = {
   title: string;
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 5
+    ...getShadowStylesFromElevation(5)
   },
   icon: {
     fontSize: 26,
