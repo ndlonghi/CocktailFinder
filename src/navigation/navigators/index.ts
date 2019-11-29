@@ -1,8 +1,9 @@
 import {createAppContainer} from "react-navigation";
 import {createStackNavigator} from "react-navigation-stack";
 
-import {MAIN_SCREEN} from "../screens";
+import {COCKTAILS, MAIN_SCREEN} from "../screens";
 import MainScreen from "../../screens/main";
+import Cocktails from "../../screens/cocktails";
 
 const RootNavigator = createStackNavigator(
   {
@@ -11,6 +12,9 @@ const RootNavigator = createStackNavigator(
       navigationOptions: {
         header: null
       }
+    },
+    [COCKTAILS]: {
+      screen: Cocktails
     }
   },
   {

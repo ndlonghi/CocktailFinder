@@ -1,7 +1,7 @@
 import React from "react";
-import {Image, StatusBar, StyleSheet} from "react-native";
-import LinearGradient from 'react-native-linear-gradient';
+import {Image, StyleSheet} from "react-native";
 
+import Screen from "../../components/screen";
 import Button from "../../components/button";
 
 const MainScreen = () => {
@@ -11,16 +11,10 @@ const MainScreen = () => {
   };
 
   return (
-    <LinearGradient
-      start={{x: 0, y: 1}}
-      end={{x: 1, y: 0}}
-      colors={['#FF0000', '#FF00FF']}
+    <Screen
+      barStyle="light-content"
       style={styles.container}
     >
-      <StatusBar
-        translucent={true}
-        backgroundColor="transparent"
-      />
       <Image
         resizeMode="contain"
         source={require('../../assets/imgs/cocktail-finder-logo.png')}
@@ -33,14 +27,13 @@ const MainScreen = () => {
         onPress={handleSearchClick}
         style={styles.searchButton}
       />
-    </LinearGradient>
+    </Screen>
   );
 
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10
