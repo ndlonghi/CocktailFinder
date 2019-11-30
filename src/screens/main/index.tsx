@@ -1,13 +1,19 @@
-import React from "react";
+import React, {FunctionComponent} from "react";
 import {Image, StyleSheet} from "react-native";
+import {NavigationStackProp} from "react-navigation-stack";
 
 import Screen from "../../components/screen";
 import Button from "../../components/button";
+import {COCKTAILS} from "../../navigation/screens";
 
-const MainScreen = () => {
+interface MainScreenProps {
+  navigation: NavigationStackProp
+}
+
+const MainScreen: FunctionComponent<MainScreenProps> = ({navigation}) => {
 
   const handleSearchClick = () => {
-    console.log('Search button clicked');
+    navigation.navigate(COCKTAILS);
   };
 
   return (

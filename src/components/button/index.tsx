@@ -5,6 +5,7 @@ import {ColorProperty} from "csstype";
 import {getShadowStylesFromElevation} from "../../tools/get-shadow-styles-from-elevation";
 
 type ButtonProps = {
+  titleColor?: ColorProperty;
   title: string;
   iconName?: string;
   iconColor?: ColorProperty;
@@ -12,7 +13,7 @@ type ButtonProps = {
   style?: StyleProp<ViewStyle>;
 }
 
-const Button: FunctionComponent<ButtonProps> = ({title, iconName, iconColor, onPress, style}) => {
+const Button: FunctionComponent<ButtonProps> = ({titleColor = 'black', title, iconName, iconColor, onPress, style}) => {
 
   return (
     <TouchableOpacity
@@ -31,7 +32,10 @@ const Button: FunctionComponent<ButtonProps> = ({title, iconName, iconColor, onP
           style={styles.icon}
         />
         }
-        <Text style={styles.title}>
+        <Text style={{
+          ...styles.title,
+          color: titleColor
+        }}>
           {title}
         </Text>
       </>
