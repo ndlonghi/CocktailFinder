@@ -26,3 +26,13 @@ In this section we can see a list of all used libraries and why they are being u
 `react-native-vector-icons`: this is used to easily add icon sets.
 
 `react-navigation`: this library is used for navigation between screens and also requires other libraries: `react-native-reanimated`, `react-native-screens`, `react-native-gesture-handler` and `react-navigation-stack`.
+
+## Improvements
+
+There are many ways the code could be improved in case the app scales.
+
+1. Create general styles and themes for colors, fonts, sizes, etc.
+
+2. Add a library to handle api calls like axios.
+
+3. In case of big amounts of data there are two possible actions: implement pagination and render a virtualized list.
