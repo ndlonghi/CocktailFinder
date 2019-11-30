@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {GestureResponderEvent} from "react-native";
+import {ActivityIndicator, GestureResponderEvent, ScrollView, StyleSheet, Text} from "react-native";
 import {bindActionCreators, Dispatch} from "redux";
 import {connect} from "react-redux";
 import {NavigationStackOptions, NavigationStackScreenComponent} from "react-navigation-stack";
@@ -9,7 +9,8 @@ import {Cocktail} from "../../store/cocktails/types";
 import Screen from "../../components/screen";
 import SearchInput from "../../components/search-input";
 import useDebounce from "../../tools/use-debounce";
-import {searchCocktails} from "../../store/cocktails/actions";
+import {receiveCocktails, searchCocktails} from "../../store/cocktails/actions";
+import CocktailItem from "../../components/cocktail-item";
 
 type NavParams = {
   hideBackButton: boolean;
@@ -33,6 +34,7 @@ const mapStateToProps = (state: RootState): { screenProps: CocktailsScreenProps 
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return bindActionCreators({
+    receiveCocktails,
     searchCocktails
   }, dispatch)
 };
@@ -45,6 +47,7 @@ const CocktailsScreen: NavigationStackScreenComponent<NavParams, CocktailsScreen
       fetching,
       error
     },
+    receiveCocktails,
     searchCocktails
   }
 ) => {
@@ -61,10 +64,14 @@ const CocktailsScreen: NavigationStackScreenComponent<NavParams, CocktailsScreen
     navigation.setParams({
       onSearchCancel,
       onSearchTextChange
-    })
+    });
+    return () => {
+      receiveCocktails([]);
+    }
   }, []);
 
   const onSearchCancel = () => {
+    receiveCocktails([]);
     navigation.setParams({hideBackButton: false});
   };
 
@@ -86,7 +93,25 @@ const CocktailsScreen: NavigationStackScreenComponent<NavParams, CocktailsScreen
       safeAreaRender
       reverseBackground
     >
-
+      <ScrollView contentContainerStyle={styles.container}>
+        {fetching &&
+        <ActivityIndicator
+          size="large"
+          style={styles.activityIndicator}
+        />
+        }
+        {error ?
+        <Text>
+          There has been an unexpected error while fetching the cocktails. Please try again later.
+        </Text> :
+          cocktails.map((cocktail: Cocktail) =>
+            <CocktailItem
+              key={cocktail.idDrink}
+              cocktail={cocktail}
+            />
+          )
+        }
+      </ScrollView>
     </Screen>
   );
 };
@@ -102,5 +127,16 @@ CocktailsScreen.navigationOptions = ({navigation}) => {
   />;
   return navigationOptions;
 };
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: 10,
+    paddingHorizontal: 10,
+    paddingBottom: 30
+  },
+  activityIndicator: {
+    marginVertical: 10
+  }
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(CocktailsScreen);

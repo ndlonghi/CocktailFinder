@@ -48,7 +48,7 @@ const Screen: FunctionComponent<ScreenProps> = (
         barStyle={barStyle}
       />
       {safeAreaRender ?
-        <SafeAreaView>
+        <SafeAreaView style={styles.safeAreaContainer}>
           {children}
         </SafeAreaView> :
         children
@@ -62,6 +62,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
+  safeAreaContainer: {
+    flex: 1
+  }
 });
 
 export default Screen;

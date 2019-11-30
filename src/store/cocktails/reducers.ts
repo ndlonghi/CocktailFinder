@@ -16,7 +16,12 @@ export function cocktailsReducer(
     case RECEIVE_COCKTAILS: {
       return {
         ...state,
-        cocktails: action.payload
+        cocktails: action.payload,
+        meta: {
+          ...state.meta, // In this case both properties in meta are overwritten, but if another property is added in the future it will be kept thanks to this
+          fetching: false,
+          error: false
+        }
       }
     }
     case FETCH_COCKTAILS: {
@@ -34,6 +39,7 @@ export function cocktailsReducer(
         ...state,
         meta: {
           ...state.meta,
+          fetching: false,
           error: true
         }
       }
