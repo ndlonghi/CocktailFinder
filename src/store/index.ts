@@ -1,4 +1,5 @@
-import {combineReducers, createStore} from "redux";
+import {applyMiddleware, combineReducers, createStore} from "redux";
+import thunk from "redux-thunk";
 
 import {cocktailsReducer} from "./cocktails/reducers";
 
@@ -10,5 +11,6 @@ const rootReducer = combineReducers({
 export type RootState = ReturnType<typeof rootReducer>;
 
 export const store = createStore(
-  rootReducer
+  rootReducer,
+  applyMiddleware(thunk)
 );

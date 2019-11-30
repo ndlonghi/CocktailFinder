@@ -19,6 +19,8 @@ In this section we can see a list of all used libraries and why they are being u
 
 `react-redux`: to integrate the functionality of redux with the react application. Although this is not required, it makes integration easier.
 
+`redux-thunk`: this library is used to dispatch async actions into the redux store.
+
 `react-native-linear-gradient`: to implement the background gradient.
 
 `react-native-vector-icons`: this is used to easily add icon sets.

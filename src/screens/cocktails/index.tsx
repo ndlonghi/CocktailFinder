@@ -1,11 +1,15 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {GestureResponderEvent} from "react-native";
+import {bindActionCreators, Dispatch} from "redux";
 import {connect} from "react-redux";
 import {NavigationStackOptions, NavigationStackScreenComponent} from "react-navigation-stack";
 
-import {Cocktail, CocktailsState} from "../../store/cocktails/types";
+import {RootState} from "../../store";
+import {Cocktail} from "../../store/cocktails/types";
 import Screen from "../../components/screen";
 import SearchInput from "../../components/search-input";
+import useDebounce from "../../tools/use-debounce";
+import {searchCocktails} from "../../store/cocktails/actions";
 
 type NavParams = {
   hideBackButton: boolean;
@@ -19,13 +23,19 @@ type CocktailsScreenProps = {
   error: boolean;
 }
 
-const mapStateToProps = (state: { cocktails: CocktailsState }): {screenProps: CocktailsScreenProps} => ({
+const mapStateToProps = (state: RootState): { screenProps: CocktailsScreenProps } => ({
   screenProps: {
     cocktails: state.cocktails.cocktails,
     fetching: state.cocktails.meta.fetching,
     error: state.cocktails.meta.error
   }
 });
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return bindActionCreators({
+    searchCocktails
+  }, dispatch)
+};
 
 const CocktailsScreen: NavigationStackScreenComponent<NavParams, CocktailsScreenProps> = (
   {
@@ -34,9 +44,18 @@ const CocktailsScreen: NavigationStackScreenComponent<NavParams, CocktailsScreen
       cocktails,
       fetching,
       error
-    }
+    },
+    searchCocktails
   }
 ) => {
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  useEffect(() => {
+    searchCocktail(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
 
   useEffect(() => {
     navigation.setParams({
@@ -53,7 +72,13 @@ const CocktailsScreen: NavigationStackScreenComponent<NavParams, CocktailsScreen
     if (text.trim().length > 0) {
       navigation.setParams({hideBackButton: true});
     }
-    console.log(text);
+    setSearchTerm(text.trim());
+  };
+
+  const searchCocktail = (searchText: string) => {
+    if (searchText.trim().length >= 3) {
+      searchCocktails(searchText);
+    }
   };
 
   return (
@@ -78,4 +103,4 @@ CocktailsScreen.navigationOptions = ({navigation}) => {
   return navigationOptions;
 };
 
-export default connect(mapStateToProps)(CocktailsScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(CocktailsScreen);
