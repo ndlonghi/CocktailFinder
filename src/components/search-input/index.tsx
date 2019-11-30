@@ -1,4 +1,4 @@
-import React, {FunctionComponent} from "react";
+import React, {FunctionComponent, useRef, useState} from "react";
 import {
   GestureResponderEvent,
   StyleProp,
@@ -19,6 +19,28 @@ interface SearchInputProps extends TextInputProps {
 
 const SearchInput: FunctionComponent<SearchInputProps> = ({onChangeText, onCancel, style}) => {
 
+  const inputRef = useRef(null);
+
+  const [showCancel, setShowCancel] = useState(false);
+
+  const handleOnChangeText = (text: string) => {
+    if (text.trim().length > 0) {
+      setShowCancel(true);
+    }
+    if (onChangeText) {
+      onChangeText(text);
+    }
+  };
+
+  const handleOnCancel = (event: GestureResponderEvent) => {
+    if (inputRef && inputRef.current) {
+      // @ts-ignore
+      inputRef.current.clear();
+    }
+    setShowCancel(false);
+    onCancel(event);
+  };
+
   return (
     <View
       style={[
@@ -33,16 +55,20 @@ const SearchInput: FunctionComponent<SearchInputProps> = ({onChangeText, onCance
           style={styles.icon}
         />
         <TextInput
-          onChangeText={onChangeText}
+          ref={inputRef}
+          placeholder="Search"
+          onChangeText={handleOnChangeText}
           style={styles.input}
         />
       </View>
+      {showCancel &&
       <Button
         titleColor="red"
         title="Cancel"
-        onPress={onCancel}
+        onPress={handleOnCancel}
         style={styles.cancelButton}
       />
+      }
     </View>
   )
 
@@ -51,7 +77,7 @@ const SearchInput: FunctionComponent<SearchInputProps> = ({onChangeText, onCance
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingRight: 8,
+    paddingHorizontal: 8,
     paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'center'

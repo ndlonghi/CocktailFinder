@@ -1,90 +1,81 @@
-import React from "react";
-import {StyleSheet, Text} from "react-native";
-import {Colors} from "react-native/Libraries/NewAppScreen";
+import React, {useEffect} from "react";
+import {GestureResponderEvent} from "react-native";
+import {connect} from "react-redux";
+import {NavigationStackOptions, NavigationStackScreenComponent} from "react-navigation-stack";
 
+import {Cocktail, CocktailsState} from "../../store/cocktails/types";
 import Screen from "../../components/screen";
+import SearchInput from "../../components/search-input";
 
-const Cocktails = () => {
+type NavParams = {
+  hideBackButton: boolean;
+  onSearchCancel: (event: GestureResponderEvent) => void;
+  onSearchTextChange: ((text: string) => void) | undefined;
+}
+
+type CocktailsScreenProps = {
+  cocktails: Cocktail[];
+  fetching: boolean;
+  error: boolean;
+}
+
+const mapStateToProps = (state: { cocktails: CocktailsState }): {screenProps: CocktailsScreenProps} => ({
+  screenProps: {
+    cocktails: state.cocktails.cocktails,
+    fetching: state.cocktails.meta.fetching,
+    error: state.cocktails.meta.error
+  }
+});
+
+const CocktailsScreen: NavigationStackScreenComponent<NavParams, CocktailsScreenProps> = (
+  {
+    navigation,
+    screenProps: {
+      cocktails,
+      fetching,
+      error
+    }
+  }
+) => {
+
+  useEffect(() => {
+    navigation.setParams({
+      onSearchCancel,
+      onSearchTextChange
+    })
+  }, []);
+
+  const onSearchCancel = () => {
+    navigation.setParams({hideBackButton: false});
+  };
+
+  const onSearchTextChange = (text: string) => {
+    if (text.trim().length > 0) {
+      navigation.setParams({hideBackButton: true});
+    }
+    console.log(text);
+  };
+
   return (
     <Screen
       safeAreaRender
       reverseBackground
     >
-      {/*
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      */}
+
     </Screen>
   );
 };
 
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
+CocktailsScreen.navigationOptions = ({navigation}) => {
+  let navigationOptions: NavigationStackOptions = {};
+  if (navigation.getParam('hideBackButton')) {
+    navigationOptions.headerLeft = null;
+  }
+  navigationOptions.headerTitle = <SearchInput
+    onChangeText={navigation.getParam('onSearchTextChange')}
+    onCancel={navigation.getParam('onSearchCancel')}
+  />;
+  return navigationOptions;
+};
 
-export default Cocktails;
+export default connect(mapStateToProps)(CocktailsScreen);
